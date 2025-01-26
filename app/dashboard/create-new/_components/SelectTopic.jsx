@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-function SelectTopic() {
+function SelectTopic({ onUserSelet }) {
   const options = [
     "Custom Prompt",
     "Random AI Story",
@@ -25,7 +25,12 @@ function SelectTopic() {
     <div>
       <h2 className="font-bold text-2xl text-primary">Content</h2>
       <p className="text-gray-500">What is the topic of your video?</p>
-      <Select onValueChange={(value) => setSelectedOption(value)}>
+      <Select
+        onValueChange={(value) => {
+          setSelectedOption(value);
+          value != "Custom Prompt" && onUserSelet("topic", value);
+        }}
+      >
         <SelectTrigger className="w-full mt-2 p-6 text-lg">
           <SelectValue placeholder="Content Type" />
         </SelectTrigger>
@@ -40,6 +45,7 @@ function SelectTopic() {
       {selectedOption == "Custom Prompt" && (
         <Textarea
           className="mt-3"
+          onChange={(e) => onUserSelet("topic", e.target.value)}
           placeholder="Write a prompt on which you want to generate video"
         />
       )}
