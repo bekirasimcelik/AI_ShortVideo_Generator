@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 
 export default function Home() {
@@ -6,6 +7,8 @@ export default function Home() {
     <div>
       <h2>merhaba</h2>
       <Button>Tıkla</Button>
+
+      <UserButton />
     </div>
   );
 }
