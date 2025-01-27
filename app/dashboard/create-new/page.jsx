@@ -17,10 +17,10 @@ function CreateNew() {
 
       <div className="mt-10 shadow-md p-10">
         {/* Select Topic */}
-        <SelectTopic onUserSelet={onHandleInputChange} />
+        <SelectTopic onUserSelect={onHandleInputChange} />
 
         {/* Select Style */}
-        <SelectStyle />
+        <SelectStyle onUserSelect={onHandleInputChange} />
 
         {/* Duration */}
 

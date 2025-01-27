@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-function SelectTopic({ onUserSelet }) {
+function SelectTopic({ onUserSelect }) {
   const options = [
     "Custom Prompt",
     "Random AI Story",
@@ -28,7 +28,7 @@ function SelectTopic({ onUserSelet }) {
       <Select
         onValueChange={(value) => {
           setSelectedOption(value);
-          value != "Custom Prompt" && onUserSelet("topic", value);
+          value != "Custom Prompt" && onUserSelect("topic", value);
         }}
       >
         <SelectTrigger className="w-full mt-2 p-6 text-lg">
