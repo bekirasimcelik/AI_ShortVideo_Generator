@@ -2,11 +2,17 @@
 import React, { useState } from "react";
 import SelectTopic from "./_components/SelectTopic";
 import SelectStyle from "./_components/SelectStyle";
+import SelectDuration from "./_components/SelectDuration";
 
 function CreateNew() {
   const [formData, setFormData] = useState([]);
   const onHandleInputChange = (fieldName, fieldValue) => {
     console.log(fieldName, fieldValue);
+
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: fieldValue,
+    }));
   };
 
   return (
@@ -23,6 +29,7 @@ function CreateNew() {
         <SelectStyle onUserSelect={onHandleInputChange} />
 
         {/* Duration */}
+        <SelectDuration onUserSelect={onHandleInputChange} />
 
         {/* Create */}
       </div>
