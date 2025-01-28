@@ -6,12 +6,30 @@ import SelectDuration from "./_components/SelectDuration";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import CustomLoading from "./_components/CustomLoading";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
+const scriptData =
+  "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. ";
 
-const scriptData = "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. "
+const FILEURL =
+  "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-27991.firebasestorage.app/o/ai-short-video-files%2F52ef4cfd-8193-4c9d-be3b-ccecdd667915.mp3?alt=media&token=f473079c-c2b9-4562-b129-053e95643ef1";
 
-const FILEURL = "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-27991.firebasestorage.app/o/ai-short-video-files%2F52ef4cfd-8193-4c9d-be3b-ccecdd667915.mp3?alt=media&token=f473079c-c2b9-4562-b129-053e95643ef1";
+const VideoSCRIPT = [
+  {
+    scene: 1,
+    imagePrompt:
+      "A bustling Roman marketplace in the year 79 AD, with merchants selling goods, people in togas walking by, and the imposing Mount Vesuvius looming in the background. Sunlight, realistic, highly detailed.",
+    contentText:
+      "Imagine a vibrant Roman marketplace, a scene of daily life in 79 AD, moments before history took a dramatic turn.",
+  },
+  {
+    scene: 2,
+    imagePrompt:
+      "Mount Vesuvius erupting with massive force, smoke billowing into the sky, ash and lava spewing from the volcano. Chaos and destruction depicted in a realistic style. Dark and dramatic lighting.",
+    contentText:
+      "Then, without warning, the earth trembled. Mount Vesuvius unleashed its fury, engulfing the nearby city of Pompeii in a deadly embrace.",
+  },
+];
 
 function CreateNew() {
   const [formData, setFormData] = useState([]);
@@ -19,6 +37,7 @@ function CreateNew() {
   const [videoScript, setVideoScript] = useState();
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [captions, setCaptions] = useState();
+  const [imageList, setImageList] = useState();
 
   const onHandleInputChange = (fieldName, fieldValue) => {
     console.log(fieldName, fieldValue);
@@ -31,9 +50,9 @@ function CreateNew() {
 
   const onCreateClickHandler = () => {
     // GetVideoScript();
-    // Burada Manuele Geçiyoruz
     // GenerateAudioFile(scriptData);
-    GenerateAudioCaption(FILEURL);
+    // GenerateAudioCaption(FILEURL);
+    GenerateImage();
   };
 
   // Get Video Script
@@ -48,53 +67,81 @@ function CreateNew() {
       formData.imageStyle +
       " format for each scene and give me result in JSON format with imagePrompt and ContentText as field.";
     console.log(prompt);
-  
-    try {
-      const resp = await axios.post("/api/get-video-script", { prompt });
-      const resultData = resp.data.result;
-      setVideoScript(resultData.video_script);
-      GenerateAudioFile(resultData);
-    } catch (error) {
-      console.error("Error fetching video script:", error);
-    } finally {
-      setLoading(false);
-    }
+
+    const result = await axios
+      .post("/api/get-video-script", {
+        prompt: prompt,
+      })
+      .then((resp) => {
+        console.log("EXE");
+        setVideoScript(resp.data.result);
+        resp.data.result && GenerateAudioFile(resp.data.result);
+      });
+    const resultData = resp.data.result;
+    setVideoScript(resultData.video_script);
+    GenerateAudioFile(resultData);
   };
-  
+
   const GenerateAudioFile = async (videoScriptData) => {
     setLoading(true);
     const videoScriptArray = videoScriptData.video_script;
-  
+
     if (!Array.isArray(videoScriptArray)) {
       console.error("Invalid data format:", videoScriptData);
       return;
     }
-  
-    let script = '';
+
+    let script = "";
     const id = uuidv4();
-    videoScriptArray.forEach(item => {
-      script = script + item.contentText + ' ';
+    videoScriptArray.forEach((item) => {
+      script = script + item.contentText + " ";
     });
 
-    await axios.post('/api/generate-audio', {
-      text: script,
-      id: id
-    }).then(resp => {
-      // console.log(resp.data);
-      setAudioFileUrl(resp.data.result);
-    })
+    await axios
+      .post("/api/generate-audio", {
+        text: script,
+        id: id,
+      })
+      .then((resp) => {
+        // console.log(resp.data);
+        setAudioFileUrl(resp.data.result);
+        resp.data.result && GenerateAudioCaption(resp.data.result);
+      });
     setLoading(false);
   };
 
-  const GenerateAudioCaption = async(fileUrl) => {
+  const GenerateAudioCaption = async (fileUrl) => {
     setLoading(true);
+    console.log(fileUrl);
 
-    await axios.post('/api/generate-caption', {
-      audioFileUrl: fileUrl
-    }).then(resp => {
-      console.log(resp.data.result);
-      setCaptions(resp?.data?.result);
-    })
+    await axios
+      .post("/api/generate-caption", {
+        audioFileUrl: fileUrl,
+      })
+      .then((resp) => {
+        console.log(resp.data.result);
+        setCaptions(resp?.data?.result);
+        GenerateImage();
+      });
+
+    console.log(videoScript, captions, audioFileUrl);
+  };
+
+  const GenerateImage = () => {
+    let images = [];
+
+    VideoSCRIPT.forEach(async (element) => {
+      await axios
+        .post("/api/generate-image", {
+          prompt: element?.imagePrompt,
+        })
+        .then((resp) => {
+          console.log(resp.data.result);
+          images.push(resp.data.result);
+        });
+    });
+    console.log(images);
+    setImageList(images);
     setLoading(false);
   };
 
