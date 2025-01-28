@@ -11,11 +11,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 const scriptData = "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. "
 
+const FILEURL = "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-27991.firebasestorage.app/o/ai-short-video-files%2F52ef4cfd-8193-4c9d-be3b-ccecdd667915.mp3?alt=media&token=f473079c-c2b9-4562-b129-053e95643ef1";
+
 function CreateNew() {
   const [formData, setFormData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [videoScript, setVideoScript] = useState();
   const [audioFileUrl, setAudioFileUrl] = useState();
+  const [captions, setCaptions] = useState();
 
   const onHandleInputChange = (fieldName, fieldValue) => {
     console.log(fieldName, fieldValue);
@@ -27,9 +30,10 @@ function CreateNew() {
   };
 
   const onCreateClickHandler = () => {
-    GetVideoScript();
+    // GetVideoScript();
     // Burada Manuele Geçiyoruz
     // GenerateAudioFile(scriptData);
+    GenerateAudioCaption(FILEURL);
   };
 
   // Get Video Script
@@ -78,6 +82,18 @@ function CreateNew() {
     }).then(resp => {
       // console.log(resp.data);
       setAudioFileUrl(resp.data.result);
+    })
+    setLoading(false);
+  };
+
+  const GenerateAudioCaption = async(fileUrl) => {
+    setLoading(true);
+
+    await axios.post('/api/generate-caption', {
+      audioFileUrl: fileUrl
+    }).then(resp => {
+      console.log(resp.data.result);
+      setCaptions(resp?.data?.result);
     })
     setLoading(false);
   };
