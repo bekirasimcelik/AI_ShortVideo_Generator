@@ -2,6 +2,9 @@ import TextToSpeech from "@google-cloud/text-to-speech";
 import { NextResponse } from "next/server";
 import { Result } from "postcss";
 
+const fs = require('fs');
+const util = require('util');
+
 const client = new TextToSpeech.TextToSpeechClient({
   apiKey: process.env.GOOGLE_API_KEY,
 });

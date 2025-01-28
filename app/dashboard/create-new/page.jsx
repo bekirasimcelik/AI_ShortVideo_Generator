@@ -6,6 +6,10 @@ import SelectDuration from "./_components/SelectDuration";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import CustomLoading from "./_components/CustomLoading";
+import { v4 as uuidv4 } from 'uuid';
+
+
+const scriptData = "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. "
 
 function CreateNew() {
   const [formData, setFormData] = useState([]);
@@ -23,6 +27,8 @@ function CreateNew() {
 
   const onCreateClickHandler = () => {
     GetVideoScript();
+    // Burada Manuele Geçiyoruz
+    // GenerateAudioFile(scriptData);
   };
 
   // Get Video Script
@@ -51,6 +57,7 @@ function CreateNew() {
   };
   
   const GenerateAudioFile = async (videoScriptData) => {
+    setLoading(true);
     const videoScriptArray = videoScriptData.video_script;
   
     if (!Array.isArray(videoScriptArray)) {
@@ -59,11 +66,18 @@ function CreateNew() {
     }
   
     let script = '';
+    const id = uuidv4();
     videoScriptArray.forEach(item => {
       script = script + item.contentText + ' ';
     });
-  
-    console.log(script);
+
+    await axios.post('/api/generate-audio', {
+      text: script,
+      id: id
+    }).then(res => {
+      console.log(resp.data);
+    })
+    setLoading(false);
   };
   
 
