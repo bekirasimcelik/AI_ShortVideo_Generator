@@ -37,16 +37,35 @@ function CreateNew() {
       formData.imageStyle +
       " format for each scene and give me result in JSON format with imagePrompt and ContentText as field.";
     console.log(prompt);
-    const result = await axios
-      .post("/api/get-video-script", {
-        prompt: prompt,
-      })
-      .then((resp) => {
-        console.log(resp.data.result);
-        setVideoScript(resp.data.result);
-      });
-    setLoading(false);
+  
+    try {
+      const resp = await axios.post("/api/get-video-script", { prompt });
+      const resultData = resp.data.result;
+      setVideoScript(resultData.video_script);
+      GenerateAudioFile(resultData);
+    } catch (error) {
+      console.error("Error fetching video script:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+  
+  const GenerateAudioFile = async (videoScriptData) => {
+    const videoScriptArray = videoScriptData.video_script;
+  
+    if (!Array.isArray(videoScriptArray)) {
+      console.error("Invalid data format:", videoScriptData);
+      return;
+    }
+  
+    let script = '';
+    videoScriptArray.forEach(item => {
+      script = script + item.contentText + ' ';
+    });
+  
+    console.log(script);
+  };
+  
 
   return (
     <div className="md:px-29">
