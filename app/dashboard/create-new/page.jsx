@@ -16,17 +16,15 @@ const FILEURL =
 
 const VideoSCRIPT = [
   {
-    scene: 1,
-    imagePrompt:
+    "imagePrompt":
       "A bustling Roman marketplace in the year 79 AD, with merchants selling goods, people in togas walking by, and the imposing Mount Vesuvius looming in the background. Sunlight, realistic, highly detailed.",
-    contentText:
+    "contentText":
       "Imagine a vibrant Roman marketplace, a scene of daily life in 79 AD, moments before history took a dramatic turn.",
   },
   {
-    scene: 2,
-    imagePrompt:
+    "imagePrompt":
       "Mount Vesuvius erupting with massive force, smoke billowing into the sky, ash and lava spewing from the volcano. Chaos and destruction depicted in a realistic style. Dark and dramatic lighting.",
-    contentText:
+    "contentText":
       "Then, without warning, the earth trembled. Mount Vesuvius unleashed its fury, engulfing the nearby city of Pompeii in a deadly embrace.",
   },
 ];
