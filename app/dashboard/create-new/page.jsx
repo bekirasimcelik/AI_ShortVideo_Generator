@@ -81,7 +81,6 @@ function CreateNew() {
     })
     setLoading(false);
   };
-  
 
   return (
     <div className="md:px-29">

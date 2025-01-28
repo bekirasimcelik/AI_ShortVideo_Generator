@@ -1,6 +1,6 @@
 import { storage } from "@/configs/FirebaseConfig";
 import TextToSpeech from "@google-cloud/text-to-speech";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { NextResponse } from "next/server";
 import { Result } from "postcss";
 
