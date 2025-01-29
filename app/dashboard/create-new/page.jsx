@@ -16,15 +16,15 @@ const FILEURL =
 
 const VideoSCRIPT = [
   {
-    "imagePrompt":
+    imagePrompt:
       "A bustling Roman marketplace in the year 79 AD, with merchants selling goods, people in togas walking by, and the imposing Mount Vesuvius looming in the background. Sunlight, realistic, highly detailed.",
-    "contentText":
+    contentText:
       "Imagine a vibrant Roman marketplace, a scene of daily life in 79 AD, moments before history took a dramatic turn.",
   },
   {
-    "imagePrompt":
+    imagePrompt:
       "Mount Vesuvius erupting with massive force, smoke billowing into the sky, ash and lava spewing from the volcano. Chaos and destruction depicted in a realistic style. Dark and dramatic lighting.",
-    "contentText":
+    contentText:
       "Then, without warning, the earth trembled. Mount Vesuvius unleashed its fury, engulfing the nearby city of Pompeii in a deadly embrace.",
   },
 ];
@@ -47,10 +47,10 @@ function CreateNew() {
   };
 
   const onCreateClickHandler = () => {
-    // GetVideoScript();
+    GetVideoScript();
     // GenerateAudioFile(scriptData);
     // GenerateAudioCaption(FILEURL);
-    GenerateImage();
+    // GenerateImage();
   };
 
   // Get Video Script
@@ -80,6 +80,8 @@ function CreateNew() {
     GenerateAudioFile(resultData);
   };
 
+  // Generating Audio File and Save FireBase Storage
+
   const GenerateAudioFile = async (videoScriptData) => {
     setLoading(true);
     const videoScriptArray = videoScriptData.video_script;
@@ -95,50 +97,56 @@ function CreateNew() {
       script = script + item.contentText + " ";
     });
 
-    await axios
-      .post("/api/generate-audio", {
-        text: script,
-        id: id,
-      })
-      .then((resp) => {
-        // console.log(resp.data);
-        setAudioFileUrl(resp.data.result);
-        resp.data.result && GenerateAudioCaption(resp.data.result);
-      });
-    setLoading(false);
+    const resp = await axios.post("/api/generate-audio", {
+      text: script,
+      id: id,
+    });
+
+    // console.log(resp.data);
+    setAudioFileUrl(resp.data.result);
+    resp.data.result && GenerateAudioCaption(resp.data.result, videoScriptData);
   };
 
-  const GenerateAudioCaption = async (fileUrl) => {
+  const GenerateAudioCaption = async (fileUrl, videoScriptData) => {
     setLoading(true);
     console.log(fileUrl);
 
-    await axios
-      .post("/api/generate-caption", {
-        audioFileUrl: fileUrl,
-      })
-      .then((resp) => {
-        console.log(resp.data.result);
-        setCaptions(resp?.data?.result);
-        GenerateImage();
-      });
+    const resp = await axios.post("/api/generate-caption", {
+      audioFileUrl: fileUrl,
+    });
 
-    console.log(videoScript, captions, audioFileUrl);
+    setCaptions(resp?.data?.result);
+    console.log(resp.data.result);
+    resp?.data?.result && GenerateImage(videoScriptData);
   };
 
-  const GenerateImage = () => {
+  const GenerateImage = async (videoScriptData) => {
     let images = [];
 
-    VideoSCRIPT.forEach(async (element) => {
-      await axios
-        .post("/api/generate-image", {
-          prompt: element?.imagePrompt,
-        })
-        .then((resp) => {
-          console.log(resp.data.result);
-          images.push(resp.data.result);
+    // await videoScriptData.forEach(async (element) => {
+    //   await axios
+    //     .post("/api/generate-image", {
+    //       prompt: element?.imagePrompt,
+    //     })
+    //     .then((resp) => {
+    //       console.log(resp.data.result);
+    //       images.push(resp.data.result);
+    //     });
+    // });
+
+    for (const element of videoScriptData)
+    {
+      try {
+        const resp = await axios.post('/api/generate-image', {
+          prompt: element.imagePrompt
         });
-    });
-    console.log(images);
+        console.log(resp.data.result);
+        images.push(resp.data.result);
+      } catch(e) {
+        console.log('Error', e);
+      }
+    }
+
     setImageList(images);
     setLoading(false);
   };
