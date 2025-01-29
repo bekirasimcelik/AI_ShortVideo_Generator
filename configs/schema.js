@@ -8,8 +8,11 @@ export const Users = pgTable("users", {
   subscription: boolean("subscription").default(false),
 });
 
-export const VideoData = pgTable('videoData', {
-  id: serial('id').primaryKey(),
-  videoCript:json('videoScript').notNull,
-  audioFileUrl:varchar('audioFileUrl').notNull,
-})
+export const VideoData = pgTable("videoData", {
+  id: serial("id").primaryKey(),
+  videoCript: json("videoScript").notNull(),
+  audioFileUrl: varchar("audioFileUrl").notNull(),
+  captions: json("captions").notNull(),
+  imageList: varchar("imageList").array(),
+  createdBy: varchar("createdBy").notNull(),
+});
