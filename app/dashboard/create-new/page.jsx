@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SelectTopic from "./_components/SelectTopic";
 import SelectStyle from "./_components/SelectStyle";
 import SelectDuration from "./_components/SelectDuration";
@@ -157,12 +157,16 @@ function CreateNew() {
 
     setVideoData(prev => ({
       ...prev,
-      'imageList': resp.data.result
+      'imageList': images
     }))
 
     setImageList(images);
     setLoading(false);
   };
+
+  useEffect(() => {
+    console.log(videoData);
+  }, [videoData]);
 
   return (
     <div className="md:px-29">
