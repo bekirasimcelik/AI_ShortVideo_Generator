@@ -123,7 +123,7 @@ function CreateNew() {
     setCaptions(resp?.data?.result);
     setVideoData(prev => ({
       ...prev,
-      'videoScript': resp.data.result
+      'captions': resp.data.result
     }))
     resp?.data?.result && GenerateImage(videoScriptData);
   };
@@ -154,6 +154,11 @@ function CreateNew() {
         console.log('Error', e);
       }
     }
+
+    setVideoData(prev => ({
+      ...prev,
+      'imageList': resp.data.result
+    }))
 
     setImageList(images);
     setLoading(false);
