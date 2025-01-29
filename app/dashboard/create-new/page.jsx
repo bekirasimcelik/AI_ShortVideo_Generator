@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import SelectTopic from "./_components/SelectTopic";
 import SelectStyle from "./_components/SelectStyle";
 import SelectDuration from "./_components/SelectDuration";
@@ -7,27 +7,28 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import CustomLoading from "./_components/CustomLoading";
 import { v4 as uuidv4 } from "uuid";
+import { VideoDataContext } from "@/app/_context/VideoDataContext";
 
-const scriptData =
-  "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. ";
+// const scriptData =
+//   "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. ";
 
-const FILEURL =
-  "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-27991.firebasestorage.app/o/ai-short-video-files%2F52ef4cfd-8193-4c9d-be3b-ccecdd667915.mp3?alt=media&token=f473079c-c2b9-4562-b129-053e95643ef1";
+// const FILEURL =
+//   "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-27991.firebasestorage.app/o/ai-short-video-files%2F52ef4cfd-8193-4c9d-be3b-ccecdd667915.mp3?alt=media&token=f473079c-c2b9-4562-b129-053e95643ef1";
 
-const VideoSCRIPT = [
-  {
-    imagePrompt:
-      "A bustling Roman marketplace in the year 79 AD, with merchants selling goods, people in togas walking by, and the imposing Mount Vesuvius looming in the background. Sunlight, realistic, highly detailed.",
-    contentText:
-      "Imagine a vibrant Roman marketplace, a scene of daily life in 79 AD, moments before history took a dramatic turn.",
-  },
-  {
-    imagePrompt:
-      "Mount Vesuvius erupting with massive force, smoke billowing into the sky, ash and lava spewing from the volcano. Chaos and destruction depicted in a realistic style. Dark and dramatic lighting.",
-    contentText:
-      "Then, without warning, the earth trembled. Mount Vesuvius unleashed its fury, engulfing the nearby city of Pompeii in a deadly embrace.",
-  },
-];
+// const VideoSCRIPT = [
+//   {
+//     imagePrompt:
+//       "A bustling Roman marketplace in the year 79 AD, with merchants selling goods, people in togas walking by, and the imposing Mount Vesuvius looming in the background. Sunlight, realistic, highly detailed.",
+//     contentText:
+//       "Imagine a vibrant Roman marketplace, a scene of daily life in 79 AD, moments before history took a dramatic turn.",
+//   },
+//   {
+//     imagePrompt:
+//       "Mount Vesuvius erupting with massive force, smoke billowing into the sky, ash and lava spewing from the volcano. Chaos and destruction depicted in a realistic style. Dark and dramatic lighting.",
+//     contentText:
+//       "Then, without warning, the earth trembled. Mount Vesuvius unleashed its fury, engulfing the nearby city of Pompeii in a deadly embrace.",
+//   },
+// ];
 
 function CreateNew() {
   const [formData, setFormData] = useState([]);
@@ -36,6 +37,7 @@ function CreateNew() {
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
+  const {videoData, setVideoData} = useContext(VideoDataContext);
 
   const onHandleInputChange = (fieldName, fieldValue) => {
     console.log(fieldName, fieldValue);
@@ -66,18 +68,18 @@ function CreateNew() {
       " format for each scene and give me result in JSON format with imagePrompt and ContentText as field.";
     console.log(prompt);
 
-    const result = await axios
+    const resp = await axios
       .post("/api/get-video-script", {
         prompt: prompt,
-      })
-      .then((resp) => {
-        console.log("EXE");
-        setVideoScript(resp.data.result);
-        resp.data.result && GenerateAudioFile(resp.data.result);
       });
-    const resultData = resp.data.result;
-    setVideoScript(resultData.video_script);
-    GenerateAudioFile(resultData);
+      if (resp.data.result) {
+        setVideoData(prev => ({
+          ...prev,
+          'videoScript': resp.data.result
+        }))
+        setVideoScript(resp.data.result);
+        GenerateAudioFile(resp.data.result);
+      }
   };
 
   // Generating Audio File and Save FireBase Storage
@@ -101,7 +103,10 @@ function CreateNew() {
       text: script,
       id: id,
     });
-
+    setVideoData(prev => ({
+      ...prev,
+      'audioFileUrl': resp.data.result
+    }))
     // console.log(resp.data);
     setAudioFileUrl(resp.data.result);
     resp.data.result && GenerateAudioCaption(resp.data.result, videoScriptData);
@@ -116,7 +121,10 @@ function CreateNew() {
     });
 
     setCaptions(resp?.data?.result);
-    console.log(resp.data.result);
+    setVideoData(prev => ({
+      ...prev,
+      'videoScript': resp.data.result
+    }))
     resp?.data?.result && GenerateImage(videoScriptData);
   };
 
