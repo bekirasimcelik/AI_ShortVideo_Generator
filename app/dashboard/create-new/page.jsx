@@ -8,6 +8,9 @@ import axios from "axios";
 import CustomLoading from "./_components/CustomLoading";
 import { v4 as uuidv4 } from "uuid";
 import { VideoDataContext } from "@/app/_context/VideoDataContext";
+import { VideoData } from "@/configs/schema";
+import { useUser } from "@clerk/nextjs";
+import { db } from "@/configs/db";
 
 // const scriptData =
 //   "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. ";
@@ -37,7 +40,8 @@ function CreateNew() {
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
-  const {videoData, setVideoData} = useContext(VideoDataContext);
+  const { videoData, setVideoData } = useContext(VideoDataContext);
+  const { user } = useUser();
 
   const onHandleInputChange = (fieldName, fieldValue) => {
     console.log(fieldName, fieldValue);
@@ -68,18 +72,17 @@ function CreateNew() {
       " format for each scene and give me result in JSON format with imagePrompt and ContentText as field.";
     console.log(prompt);
 
-    const resp = await axios
-      .post("/api/get-video-script", {
-        prompt: prompt,
-      });
-      if (resp.data.result) {
-        setVideoData(prev => ({
-          ...prev,
-          'videoScript': resp.data.result
-        }))
-        setVideoScript(resp.data.result);
-        GenerateAudioFile(resp.data.result);
-      }
+    const resp = await axios.post("/api/get-video-script", {
+      prompt: prompt,
+    });
+    if (resp.data.result) {
+      setVideoData((prev) => ({
+        ...prev,
+        videoScript: resp.data.result,
+      }));
+      setVideoScript(resp.data.result);
+      GenerateAudioFile(resp.data.result);
+    }
   };
 
   // Generating Audio File and Save FireBase Storage
@@ -103,16 +106,17 @@ function CreateNew() {
       text: script,
       id: id,
     });
-    setVideoData(prev => ({
+    setVideoData((prev) => ({
       ...prev,
-      'audioFileUrl': resp.data.result
-    }))
+      audioFileUrl: resp.data.result,
+    }));
     // console.log(resp.data);
     setAudioFileUrl(resp.data.result);
-    resp.data.result && GenerateAudioCaption(resp.data.result, videoScriptData);
+    resp.data.result &&
+      (await GenerateAudioCaption(resp.data.result, videoScriptArray));
   };
 
-  const GenerateAudioCaption = async (fileUrl, videoScriptData) => {
+  const GenerateAudioCaption = async (fileUrl, videoScriptArray) => {
     setLoading(true);
     console.log(fileUrl);
 
@@ -121,44 +125,32 @@ function CreateNew() {
     });
 
     setCaptions(resp?.data?.result);
-    setVideoData(prev => ({
+    setVideoData((prev) => ({
       ...prev,
-      'captions': resp.data.result
-    }))
-    resp?.data?.result && GenerateImage(videoScriptData);
+      captions: resp.data.result,
+    }));
+    resp.data.result && (await GenerateImage(videoScriptArray));
   };
 
-  const GenerateImage = async (videoScriptData) => {
+  const GenerateImage = async (videoScriptArray) => {
     let images = [];
 
-    // await videoScriptData.forEach(async (element) => {
-    //   await axios
-    //     .post("/api/generate-image", {
-    //       prompt: element?.imagePrompt,
-    //     })
-    //     .then((resp) => {
-    //       console.log(resp.data.result);
-    //       images.push(resp.data.result);
-    //     });
-    // });
-
-    for (const element of videoScriptData)
-    {
+    for (const element of videoScriptArray) {
       try {
-        const resp = await axios.post('/api/generate-image', {
-          prompt: element.imagePrompt
+        const resp = await axios.post("/api/generate-image", {
+          prompt: element.imagePrompt,
         });
         console.log(resp.data.result);
         images.push(resp.data.result);
-      } catch(e) {
-        console.log('Error', e);
+      } catch (e) {
+        console.log("Error", e);
       }
     }
 
-    setVideoData(prev => ({
+    setVideoData((prev) => ({
       ...prev,
-      'imageList': images
-    }))
+      imageList: images,
+    }));
 
     setImageList(images);
     setLoading(false);
@@ -166,7 +158,28 @@ function CreateNew() {
 
   useEffect(() => {
     console.log(videoData);
+    if (Object.keys(videoData).length == 4) {
+      SaveVideoData(videoData);
+    }
   }, [videoData]);
+
+  const SaveVideoData = async (videoData) => {
+    setLoading(true);
+
+    const result = await db
+      .insert(VideoData)
+      .values({
+        videoScript: videoData?.videoScript,
+        audioFileUrl: videoData?.audioFileUrl,
+        captions: videoData?.captions,
+        imageList: videoData?.imageList,
+        createdBy: user?.primaryEmailAddress?.emailAddress,
+      })
+      .returning({ id: VideoData?.id });
+
+    console.log(result);
+    setLoading(false);
+  };
 
   return (
     <div className="md:px-29">
