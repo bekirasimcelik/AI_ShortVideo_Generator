@@ -41,8 +41,8 @@ function CreateNew() {
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
-  const [playVideo, setPlayVideo] = useState(false);
-  const [videoId, setVideoId] = useState();
+  const [playVideo, setPlayVideo] = useState(true);
+  const [videoId, setVideoId] = useState(1);
 
   const { videoData, setVideoData } = useContext(VideoDataContext);
   const { user } = useUser();
@@ -181,6 +181,8 @@ function CreateNew() {
       })
       .returning({ id: VideoData?.id });
 
+    setVideoId(result[0].id);
+    setPlayVideo(true);
     console.log(result);
     setLoading(false);
   };
@@ -207,7 +209,7 @@ function CreateNew() {
         </Button>
       </div>
       <CustomLoading loading={loading} />
-      <PlayerDialog playVideo={} videoId={} />
+      <PlayerDialog playVideo={playVideo} videoId={videoId} />
     </div>
   );
 }
