@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,12 +11,19 @@ import {
 import { Player } from "@remotion/player";
 import RemotionVideo from "./RemotionVideo";
 
-const PlayerDialog = () => {
+const PlayerDialog = ({ playVideo, videoId }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+
+  useEffect(() => {
+    setOpenDialog(playVideo);
+  }, [playVideo]);
   return (
     <Dialog>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className= "text-3xl font-bold my-5">Your Video is Ready</DialogTitle>
+          <DialogTitle className="text-3xl font-bold my-5">
+            Your Video is Ready
+          </DialogTitle>
           <DialogDescription>
             <Player
               component={RemotionVideo}

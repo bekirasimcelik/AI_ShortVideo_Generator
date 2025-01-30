@@ -11,6 +11,7 @@ import { VideoDataContext } from "@/app/_context/VideoDataContext";
 import { VideoData } from "@/configs/schema";
 import { useUser } from "@clerk/nextjs";
 import { db } from "@/configs/db";
+import PlayerDialog from "../_components/PlayerDialog";
 
 // const scriptData =
 //   "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. ";
@@ -40,6 +41,9 @@ function CreateNew() {
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
+  const [playVideo, setPlayVideo] = useState(false);
+  const [videoId, setVideoId] = useState();
+
   const { videoData, setVideoData } = useContext(VideoDataContext);
   const { user } = useUser();
 
@@ -203,6 +207,7 @@ function CreateNew() {
         </Button>
       </div>
       <CustomLoading loading={loading} />
+      <PlayerDialog playVideo={} videoId={} />
     </div>
   );
 }
