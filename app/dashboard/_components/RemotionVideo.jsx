@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Img, Sequence, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, Img, Sequence, useVideoConfig } from "remotion";
 
 function RemotionVideo({ script, imageList, audioFileUrl, captions, setDurationInFrame }) {
 
@@ -32,6 +32,7 @@ function RemotionVideo({ script, imageList, audioFileUrl, captions, setDurationI
           </Sequence>
         </>
       ))}
+      <Audio src={audioFileUrl} />
     </AbsoluteFill>
   );
 }
