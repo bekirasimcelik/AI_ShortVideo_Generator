@@ -45,6 +45,7 @@ function PlayerDialog ({ playVideo, videoId }) {
               compositionWidth={300}
               compositionHeight={450}
               fps={30}
+              controls={true}
               inputProps={{
                 ...videoData
               }}
