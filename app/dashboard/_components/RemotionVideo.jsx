@@ -1,11 +1,15 @@
 import React from "react";
 import { AbsoluteFill, Img, Sequence, useVideoConfig } from "remotion";
 
-function RemotionVideo({ script, imageList, audioFileUrl, captions }) {
+function RemotionVideo({ script, imageList, audioFileUrl, captions, setDurationInFrame }) {
 
   const { fps } = useVideoConfig();
+
   const getDurationFrame = () => {
-    return (captions[captions?.length - 1]?.end / 1000) * fps;
+
+    setDurationInFrame(captions[captions?.length - 1]?.end / 1000 * fps)
+  
+    return captions[captions?.length - 1]?.end / 1000 * fps;
   };
   
   return (

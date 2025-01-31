@@ -18,6 +18,7 @@ import { eq } from "drizzle-orm";
 function PlayerDialog ({ playVideo, videoId }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [videoData, setVideoData] = useState();
+  const [durationInFrame, setDurationInFrame] = useState(100);
 
   useEffect(() => {
     setOpenDialog(playVideo);
@@ -41,13 +42,14 @@ function PlayerDialog ({ playVideo, videoId }) {
           <DialogDescription>
             <Player
               component={RemotionVideo}
-              durationInFrames={120}
+              durationInFrames={Number(durationInFrame.toFixed(0))}
               compositionWidth={300}
               compositionHeight={450}
               fps={30}
               controls={true}
               inputProps={{
-                ...videoData
+                ...videoData,
+                setDurationInFrame:(frameValue) => setDurationInFrame(frameValue)
               }}
             />
             <div className="flex gap-10">
