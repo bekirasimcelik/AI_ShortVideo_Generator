@@ -12,7 +12,7 @@ function VideoList({videoList}) {
   return (
     <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
       {videoList?.map((video, index) => (
-        <div className='cursor-pointer hover:scale-105 transition-all' onClick={() => {setOpenPlayDialog(true); setVideoId(video.id)}}>
+        <div className='cursor-pointer hover:scale-105 transition-all' onClick={() => {setOpenPlayDialog(Date.now()); setVideoId(video.id)}}>
           <Thumbnail
             component={RemotionVideo}
             compositionWidth={250}
