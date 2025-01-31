@@ -42,7 +42,7 @@ function CreateNew() {
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
   const [playVideo, setPlayVideo] = useState(true);
-  const [videoId, setVideoId] = useState(1);
+  const [videoId, setVideoId] = useState(6);
 
   const { videoData, setVideoData } = useContext(VideoDataContext);
   const { user } = useUser();
@@ -170,16 +170,13 @@ function CreateNew() {
   const SaveVideoData = async (videoData) => {
     setLoading(true);
 
-    const result = await db
-      .insert(VideoData)
-      .values({
-        videoScript: videoData?.videoScript,
-        audioFileUrl: videoData?.audioFileUrl,
-        captions: videoData?.captions,
-        imageList: videoData?.imageList,
+    const result = await db.insert(VideoData).values({
+        script: videoData?.videoScript,
+        audioFileUrl: videoData?.audioFileUrl??'',
+        captions: videoData?.captions??'',
+        imageList: videoData?.imageList??[],
         createdBy: user?.primaryEmailAddress?.emailAddress,
-      })
-      .returning({ id: VideoData?.id });
+      }).returning({ id: VideoData?.id });
 
     setVideoId(result[0].id);
     setPlayVideo(true);

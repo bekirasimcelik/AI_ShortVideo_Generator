@@ -15,7 +15,7 @@ import { db } from "@/configs/db";
 import { VideoData } from "@/configs/schema";
 import { eq } from "drizzle-orm";
 
-const PlayerDialog = ({ playVideo, videoId }) => {
+function PlayerDialog ({ playVideo, videoId }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [videoData, setVideoData] = useState();
 
@@ -33,8 +33,8 @@ const PlayerDialog = ({ playVideo, videoId }) => {
 
   return (
     <Dialog open={openDialog}>
-      <DialogContent className="bg-white">
-        <DialogHeader className="flex bg-white flex-col items-center">
+      <DialogContent className="bg-white flex flex-col items-center">
+        <DialogHeader>
           <DialogTitle className="text-3xl font-bold my-5">
             Your Video is Ready
           </DialogTitle>
