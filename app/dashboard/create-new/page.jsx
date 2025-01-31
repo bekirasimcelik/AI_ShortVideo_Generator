@@ -170,13 +170,16 @@ function CreateNew() {
   const SaveVideoData = async (videoData) => {
     setLoading(true);
 
-    const result = await db.insert(VideoData).values({
-        script: videoData?.videoScript,
-        audioFileUrl: videoData?.audioFileUrl??'',
-        captions: videoData?.captions??'',
-        imageList: videoData?.imageList??[],
+    const result = await db
+      .insert(VideoData)
+      .values({
+        videoScript: videoData?.videoScript,
+        audioFileUrl: videoData?.audioFileUrl ?? "",
+        captions: videoData?.captions ?? "",
+        imageList: videoData?.imageList ?? [],
         createdBy: user?.primaryEmailAddress?.emailAddress,
-      }).returning({ id: VideoData?.id });
+      })
+      .returning({ id: VideoData?.id });
 
     setVideoId(result[0].id);
     setPlayVideo(true);

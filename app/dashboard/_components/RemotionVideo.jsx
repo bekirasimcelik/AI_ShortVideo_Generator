@@ -9,7 +9,7 @@ import {
 } from "remotion";
 
 function RemotionVideo({
-  script,
+  videoScript,
   imageList,
   audioFileUrl,
   captions,
@@ -19,26 +19,28 @@ function RemotionVideo({
   const frame = useCurrentFrame();
 
   const getDurationFrame = () => {
-    setDurationInFrame(captions[captions?.length - 1]?.end / 1000 * fps);
+    setDurationInFrame((captions[captions?.length - 1]?.end / 1000) * fps);
 
-    return captions[captions?.length - 1]?.end / 1000 * fps;
+    return (captions[captions?.length - 1]?.end / 1000) * fps;
   };
 
   const getCurrentCaptions = () => {
-    const currentTime = frame / 30 * 1000; // Convert frame number to milliseconds (30 fps)
-    const currentCaption = captions.find((word) => currentTime >= word.start && currentTime <= word.end);
+    const currentTime = (frame / 30) * 1000; // Convert frame number to milliseconds (30 fps)
+    const currentCaption = captions.find(
+      (word) => currentTime >= word.start && currentTime <= word.end
+    );
 
-    return currentCaption?currentCaption?.text:'';
+    return currentCaption ? currentCaption?.text : "";
   };
 
-  return script&&(
-    <AbsoluteFill
-      style={{
-        backgroundColor: "black",
-      }}
-    >
-      {imageList?.map((item, index) => (
-        <>
+  return (
+    videoScript?.video_script && (
+      <AbsoluteFill
+        style={{
+          backgroundColor: "black",
+        }}
+      >
+        {imageList?.map((item, index) => (
           <Sequence
             key={index}
             from={(index * getDurationFrame()) / imageList?.length}
@@ -66,10 +68,10 @@ function RemotionVideo({
               </AbsoluteFill>
             </AbsoluteFill>
           </Sequence>
-        </>
-      ))}
-      <Audio src={audioFileUrl} />
-    </AbsoluteFill>
+        ))}
+        <Audio src={audioFileUrl} />
+      </AbsoluteFill>
+    )
   );
 }
 

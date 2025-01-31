@@ -15,7 +15,7 @@ import { db } from "@/configs/db";
 import { VideoData } from "@/configs/schema";
 import { eq } from "drizzle-orm";
 
-function PlayerDialog ({ playVideo, videoId }) {
+function PlayerDialog({ playVideo, videoId }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [videoData, setVideoData] = useState();
   const [durationInFrame, setDurationInFrame] = useState(100);
@@ -25,10 +25,12 @@ function PlayerDialog ({ playVideo, videoId }) {
     videoId && GetVideoData();
   }, [playVideo]);
 
-  const GetVideoData = async() => {
-    const result = await db.select().from(VideoData).where(eq(VideoData.id, videoId));
-
-    console.log(result)
+  const GetVideoData = async () => {
+    const result = await db
+      .select()
+      .from(VideoData)
+      .where(eq(VideoData.id, videoId));
+    console.log("Fetched video data:", result[0]);
     setVideoData(result[0]);
   };
 
@@ -39,28 +41,31 @@ function PlayerDialog ({ playVideo, videoId }) {
           <DialogTitle className="text-3xl font-bold my-5">
             Your Video is Ready
           </DialogTitle>
-          <DialogDescription>
-            <Player
-              component={RemotionVideo}
-              durationInFrames={Number(durationInFrame.toFixed(0))}
-              compositionWidth={300}
-              compositionHeight={450}
-              fps={30}
-              controls={true}
-              inputProps={{
-                ...videoData,
-                setDurationInFrame:(frameValue) => setDurationInFrame(frameValue)
-              }}
-            />
-            <div className="flex gap-10 mt-10">
+          <DialogDescription asChild>
+            <div>
+              <Player
+                component={RemotionVideo}
+                durationInFrames={Number(durationInFrame.toFixed(0))}
+                compositionWidth={300}
+                compositionHeight={450}
+                fps={30}
+                controls={true}
+                inputProps={{
+                  ...videoData,
+                  setDurationInFrame: (frameValue) =>
+                    setDurationInFrame(frameValue),
+                }}
+              />
+              <div className="flex gap-10 mt-10">
                 <Button variant="ghost">Cancel</Button>
                 <Button>Export</Button>
+              </div>
             </div>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default PlayerDialog;
