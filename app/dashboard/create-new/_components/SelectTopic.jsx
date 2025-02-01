@@ -45,7 +45,7 @@ function SelectTopic({ onUserSelect }) {
       {selectedOption == "Custom Prompt" && (
         <Textarea
           className="mt-3"
-          onChange={(e) => onUserSelet("topic", e.target.value)}
+          onChange={(e) => onUserSelect("topic", e.target.value)}
           placeholder="Write a prompt on which you want to generate video"
         />
       )}

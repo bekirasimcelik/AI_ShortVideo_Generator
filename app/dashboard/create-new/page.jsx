@@ -14,6 +14,7 @@ import { db } from "@/configs/db";
 import PlayerDialog from "../_components/PlayerDialog";
 import { UserDetailContext } from "@/app/_context/UserDetailContext";
 import { eq } from "drizzle-orm";
+import { toast } from "sonner";
 
 // const scriptData =
 //   "The old cabin stood alone, nestled deep within a forest where shadows danced with every rustle of leaves. Inside, an empty rocking chair swayed slowly, its rhythm echoing the silence of the night. An ancient book lay open on a table, its pages filled with symbols that seemed to writhe in the dim light. From the corner of the room, a shadowy figure emerged, its form barely visible in the darkness, but its presence undeniable. With a slow creak, the front door swung open, revealing a path into the dark woods, beckoning like an invitation. And then a whisper, soft as the wind through leaves, as if the very forest was alive with a presence, following and surrounding you. ";
@@ -43,11 +44,11 @@ function CreateNew() {
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
-  const [playVideo, setPlayVideo] = useState(true);
+  const [playVideo, setPlayVideo] = useState(false);
   const [videoId, setVideoId] = useState(6);
 
   const { videoData, setVideoData } = useContext(VideoDataContext);
-  const {userDetail, setUserDetail} = useContext(UserDetailContext);
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const { user } = useUser();
 
   const onHandleInputChange = (fieldName, fieldValue) => {
@@ -60,10 +61,9 @@ function CreateNew() {
   };
 
   const onCreateClickHandler = () => {
-    if(!userDetail?.credits>=0)
-    {
-      toast("You don't have enough credits")
-      return ;
+    if (userDetail?.credits < 10) {
+      toast("You don't have enough credits");
+      return;
     }
     GetVideoScript();
     // GenerateAudioFile(scriptData);
@@ -197,14 +197,17 @@ function CreateNew() {
   };
 
   const UpdateUserCredits = async () => {
-    const result = await db.update(Users).set({
-      credits:userDetail?.credits-10
-    }).where(eq(Users?.email, user?.primaryEmailAddress?.emailAddress))
+    const result = await db
+      .update(Users)
+      .set({
+        credits: userDetail?.credits - 10,
+      })
+      .where(eq(Users?.email, user?.primaryEmailAddress?.emailAddress));
     console.log(result);
-    setUserDetail(prev => ({
+    setUserDetail((prev) => ({
       ...prev,
-      "credits": userDetail?.credits-10
-    }))
+      credits: userDetail?.credits - 10,
+    }));
   };
 
   return (
