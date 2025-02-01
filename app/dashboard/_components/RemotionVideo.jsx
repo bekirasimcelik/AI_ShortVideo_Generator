@@ -65,6 +65,7 @@ function RemotionVideo({
               >
                 <Img
                   src={item}
+                  alt="images"
                   style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${scale(index)})` }}
                 />
                 <AbsoluteFill

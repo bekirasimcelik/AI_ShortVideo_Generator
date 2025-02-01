@@ -15,7 +15,7 @@ function Header() {
       </div>
       <div className="flex gap-3 items-center">
       <div className="flex gap-2 items-center">
-      <Image src={'/coin.png'} width={25} height={25} />
+      <Image src={'/coin.png'} width={25} height={25} alt="coinlogo" />
         <h2>
           {userDetail?.credits}
         </h2>
