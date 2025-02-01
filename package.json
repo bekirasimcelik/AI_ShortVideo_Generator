@@ -28,10 +28,12 @@
     "firebase": "^11.2.0",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
+    "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remotion": "4.0.256",
     "replicate": "^1.0.1",
+    "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.5"
