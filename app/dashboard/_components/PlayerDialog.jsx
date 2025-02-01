@@ -22,15 +22,6 @@ function PlayerDialog({ playVideo, videoId }) {
   const [durationInFrame, setDurationInFrame] = useState(100);
   const router = useRouter();
 
-  useEffect(() => {
-    if (playVideo && videoId) {
-      setOpenDialog(true);
-      GetVideoData();
-    } else {
-      setOpenDialog(false);
-    }
-  }, [playVideo, videoId]);
-
   const GetVideoData = async () => {
     const result = await db
       .select()
@@ -40,8 +31,24 @@ function PlayerDialog({ playVideo, videoId }) {
     setVideoData(result[0]);
   };
 
+  useEffect(() => {
+    if (playVideo && videoId) {
+      setOpenDialog(true);
+      GetVideoData();
+    } else {
+      setOpenDialog(false);
+      setVideoData(null);
+    }
+  }, [playVideo, videoId]);
+
+  const handleClose = () => {
+    setOpenDialog(false);
+    onClose?.();
+    router.replace("/dashboard");
+  };
+
   return (
-    <Dialog open={openDialog}>
+    <Dialog open={openDialog} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="bg-white flex flex-col items-center">
         <DialogHeader>
           <DialogTitle className="text-3xl font-bold my-5">
@@ -49,21 +56,31 @@ function PlayerDialog({ playVideo, videoId }) {
           </DialogTitle>
           <DialogDescription asChild>
             <div>
-              <Player
-                component={RemotionVideo}
-                durationInFrames={Number(durationInFrame.toFixed(0))}
-                compositionWidth={300}
-                compositionHeight={450}
-                fps={30}
-                controls={true}
-                inputProps={{
-                  ...videoData,
-                  setDurationInFrame: (frameValue) =>
-                    setDurationInFrame(frameValue),
-                }}
-              />
+              {videoData && (
+                <Player
+                  component={RemotionVideo}
+                  durationInFrames={Number(durationInFrame.toFixed(0))}
+                  compositionWidth={300}
+                  compositionHeight={450}
+                  fps={30}
+                  controls={true}
+                  inputProps={{
+                    ...videoData,
+                    setDurationInFrame: (frameValue) =>
+                      setDurationInFrame(frameValue),
+                  }}
+                />
+              )}
               <div className="flex gap-10 mt-10">
-                <Button variant="ghost" onClick={() => {router.replace('/dashboard'); setOpenDialog(false)}}>Cancel</Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    router.replace("/dashboard");
+                    setOpenDialog(false);
+                  }}
+                >
+                  Cancel
+                </Button>
                 <Button>Export</Button>
               </div>
             </div>

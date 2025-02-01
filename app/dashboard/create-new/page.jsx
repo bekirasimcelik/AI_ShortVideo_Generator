@@ -45,7 +45,7 @@ function CreateNew() {
   const [captions, setCaptions] = useState();
   const [imageList, setImageList] = useState();
   const [playVideo, setPlayVideo] = useState(false);
-  const [videoId, setVideoId] = useState(6);
+  const [videoId, setVideoId] = useState(null);
 
   const { videoData, setVideoData } = useContext(VideoDataContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
@@ -169,31 +169,34 @@ function CreateNew() {
   };
 
   useEffect(() => {
-    console.log(videoData);
-    if (Object.keys(videoData).length == 4) {
+    if (videoData && Object.keys(videoData).length === 4) {
       SaveVideoData(videoData);
     }
   }, [videoData]);
 
   const SaveVideoData = async (videoData) => {
-    setLoading(true);
-
-    const result = await db
-      .insert(VideoData)
-      .values({
-        videoScript: videoData?.videoScript,
-        audioFileUrl: videoData?.audioFileUrl ?? "",
-        captions: videoData?.captions ?? "",
-        imageList: videoData?.imageList ?? [],
-        createdBy: user?.primaryEmailAddress?.emailAddress,
-      })
-      .returning({ id: VideoData?.id });
-
-    await UpdateUserCredits();
-    setVideoId(result[0].id);
-    setPlayVideo(true);
-    console.log(result);
-    setLoading(false);
+    try {
+      setLoading(true);
+  
+      const result = await db
+        .insert(VideoData)
+        .values({
+          videoScript: videoData?.videoScript,
+          audioFileUrl: videoData?.audioFileUrl ?? "",
+          captions: videoData?.captions ?? "",
+          imageList: videoData?.imageList ?? [],
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+        })
+        .returning({ id: VideoData?.id });
+  
+      await UpdateUserCredits();
+      setVideoId(result[0].id);
+      setPlayVideo(true);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error saving video:", error);
+      setLoading(false);
+    }
   };
 
   const UpdateUserCredits = async () => {
@@ -232,7 +235,10 @@ function CreateNew() {
         </Button>
       </div>
       <CustomLoading loading={loading} />
-      <PlayerDialog playVideo={playVideo} videoId={videoId} />
+      <PlayerDialog playVideo={playVideo} videoId={videoId} onClose={() => {
+        setPlayVideo(false);
+        setVideoId(null);
+      }}/>
     </div>
   );
 }
