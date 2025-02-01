@@ -14,7 +14,8 @@ function Header() {
         <h2 className="font-bold text-xl">AI Short Video Generator</h2>
       </div>
       <div className="flex gap-3 items-center">
-      <div>
+      <div className="flex gap-2 items-center">
+      <Image src={'/coin.png'} width={25} height={25} />
         <h2>
           {userDetail?.credits}
         </h2>
