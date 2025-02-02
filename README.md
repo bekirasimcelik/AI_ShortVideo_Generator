@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Short Video Generator 🎥
 
-## Getting Started
+![AI Video Generator Banner](https://your-banner-image-url.png)
 
-First, run the development server:
+AI Short Video Generator is a modern web application that automatically creates short video content using artificial intelligence technologies. Users can create, edit and share their own custom videos with a few clicks.
+
+## 🌟 Features
+
+- 🤖 AI-powered scenario creation
+- 🎨 Customizable video styles
+- 🔊 Automatic voice synthesis
+- 📝 Automatic subtitle generation
+- 🖼️ Image generation with AI
+- 💳 Credit-based utilization system
+- 👥 User management and authentication
+
+## 🛠️ Technologies Used
+
+- **Frontend**: Next.js 15, React 19, TailwindCSS
+- **Backend**: Next.js API Routes
+- **Database**: NeonDB (PostgreSQL)
+- **Authentication**: Clerk
+- **AI Services**: Google Gemini, Replicate
+- **Storage**: Firebase Storage
+- **Video Processing**: Remotion
+- **UI Components**: Radix UI
+- **Other**: AssemblyAI (Subtitling), Google Text-to-Speech
+
+## 🚀 Setup
+
+1. Clone the repository:
+
+```bash
+https://github.com/bekirasimcelik/AI_ShortVideo_Generator.git
+
+cd ai-video-generator
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+Create a .env file with the necessary variables.
+
+NEXT_PUBLIC_DRIZZLE_DATABASE_URL=your_neon_db_url
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_pub_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_API_KEY=your_google_api_key
+NEXT_PUBLICK_FIREBASE_API_KEY=your_firebase_api_key
+CAPTION_API=your_assemblyai_api_key
+REPLICATE_API_TOKEN=your_replicate_token
+
+4. Run the development server:
+
+```bash
+npm run db:push
+```
+
+5. Run the database studio:
+
+```bash
+npm run db:studio
+```
+
+6. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔑 Required API Keys
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+| Service       | Free Limit         | Registration URL                           |
+| ------------- | ------------------ | ------------------------------------------ |
+| Clerk         | ✅ Starter package | [Clerk](https://clerk.dev)                 |
+| Google Gemini | ✅ Monthly quota   | [Google AI](https://makersuite.google.com) |
+| Firebase      | ✅ Spark plan      | [Firebase](https://firebase.google.com)    |
+| AssemblyAI    | 🔄 Limited trial   | [AssemblyAI](https://assemblyai.com)       |
+| Replicate     | 💰 Per use         | [Replicate](https://replicate.com)         |
+| NeonDB        | ✅ Free tier       | [NeonDB](https://neon.tech)                |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Usage
 
-## Learn More
+1. Create an account or log in
+2. Click on the “Create New” button from the Dashboard
+3. Choose video subject and style
+4. Wait for AI to generate the video content
+5. Preview and download the generated video
 
-To learn more about Next.js, take a look at the following resources:
+## 💡 Features and Limits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 30 credits for each new user
+- 10 credits for each video creation
+- Maximum video duration: 60 seconds
+- Supported styles: Generate your own story, Random AI Story, Scary Story, Historical Facts, Bed Time Story, Motivational, Fun Facts.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contribution
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Fork
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit (`git commit -m 'feat: Add amazing feature'`)
+4. Push to Branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
