@@ -1,8 +1,12 @@
 # AI Short Video Generator 🎥
 
-![AI Video Generator Banner](https://your-banner-image-url.png)
+![AI Video Generator Banner]
 
 AI Short Video Generator is a modern web application that automatically creates short video content using artificial intelligence technologies. Users can create, edit and share their own custom videos with a few clicks.
+
+Watch how it works:
+
+https://github.com/user-attachments/assets/9bae9ed1-9b28-4e8f-b636-24071a1c7ba6
 
 ## 🌟 Features
 
