@@ -46,14 +46,14 @@ npm install
 
 Create a .env file with the necessary variables.
 
-NEXT_PUBLIC_DRIZZLE_DATABASE_URL=your_neon_db_url
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_pub_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
-GOOGLE_API_KEY=your_google_api_key
-NEXT_PUBLICK_FIREBASE_API_KEY=your_firebase_api_key
-CAPTION_API=your_assemblyai_api_key
-REPLICATE_API_TOKEN=your_replicate_token
+- **NEXT_PUBLIC_DRIZZLE_DATABASE_URL**=your_neon_db_url
+- **NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY**=your_clerk_pub_key
+- **CLERK_SECRET_KEY**=your_clerk_secret_key
+- **NEXT_PUBLIC_GEMINI_API_KEY**=your_gemini_api_key
+- **GOOGLE_API_KEY**=your_google_api_key
+- **NEXT_PUBLICK_FIREBASE_API_KEY**=your_firebase_api_key
+- **CAPTION_API**=your_assemblyai_api_key
+- **REPLICATE_API_TOKEN**=your_replicate_token
 
 4. Run the development server:
 
