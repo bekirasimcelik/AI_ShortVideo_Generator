@@ -14,15 +14,15 @@ function SelectStyle({ onUserSelect }) {
     },
     {
       name: "Comic",
-      image: "/cartoon.png",
+      image: "/comic.png",
     },
     {
       name: "WaterColor",
-      image: "/cartoon.png",
+      image: "/waterColor.png",
     },
     {
       name: "GTA",
-      image: "/cartoon.png",
+      image: "/gta.png",
     },
   ];
 
